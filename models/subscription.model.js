@@ -101,8 +101,12 @@ subsciptionSchema.pre("save", function (next) {
         this.duration * renewalPeriods[this.frequency]
     );
   }
+
+  if (this.renewalDate < new Date()) {
+    this.status = "expired";
+  }
   next();
 });
 
-// const Subscription = mongoose.model("Subscription", subsciptionSchema);
-// export default Subscription;
+const Subscription = mongoose.model("Subscription", subsciptionSchema);
+export default Subscription;
