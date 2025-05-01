@@ -45,7 +45,7 @@ const subsciptionSchema = new mongoose.Schema({
   },
   status: {
     type: String,
-    enum: ["active", "cancelld", "expired"],
+    enum: ["active", "cancelled", "expired"],
     default: "active",
   },
   startDate: {
@@ -76,7 +76,6 @@ const subsciptionSchema = new mongoose.Schema({
   },
   duration: {
     type: Number,
-    required: [true, "Subscription duration is required"],
     min: 1,
   },
 });
@@ -102,6 +101,8 @@ subsciptionSchema.pre("save", function (next) {
     );
   }
 
+  // To keep status "active", ensure renewalDate is set to a future date
+  // Example: If today is 2024-01-10, set renewalDate to something like 2024-12-31
   if (this.renewalDate < new Date()) {
     this.status = "expired";
   }

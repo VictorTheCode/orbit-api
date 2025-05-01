@@ -94,5 +94,19 @@ export const signIn = async (req, res, next) => {
 };
 
 export const signOut = async (req, res, next) => {
-  // Implement sign out logic here
+  try {
+    // Clear the authentication token from client-side
+    res.clearCookie("token");
+
+    // Invalidate the token on server-side
+    req.user = null;
+    req.token = null;
+
+    res.status(200).json({
+      success: true,
+      message: "User signed out successfully",
+    });
+  } catch (error) {
+    next(error);
+  }
 };
